@@ -25,8 +25,8 @@ CREATE TABLE
 CREATE TABLE
   books_authors (
     book_author_id INTEGER PRIMARY KEY NOT NULL auto_increment,
-    book_id INTEGER,
-    author_id INTEGER,
+    book_id INTEGER NOT NULL,
+    author_id INTEGER NOT NULL,
     FOREIGN key (book_id) REFERENCES books (book_id),
     FOREIGN key (author_id) REFERENCES authors (author_id)
   );
@@ -55,8 +55,8 @@ CREATE TABLE
 CREATE TABLE
   circulation (
     circulation_id INTEGER PRIMARY KEY NOT NULL auto_increment,
-    book_id INTEGER,
-    patron_id INTEGER,
+    book_id INTEGER NOT NULL,
+    patron_id INTEGER NOT NULL,
     checkout_date DATE NOT NULL,
     due_date DATE NOT NULL,
     return_date DATE,
