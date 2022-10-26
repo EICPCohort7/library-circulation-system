@@ -1,6 +1,6 @@
 import { random } from 'lodash-es';
 import meow from 'meow';
-import { generateCheckedOut, generateDates, getBookInInventory } from './generate-functions';
+import { generateCheckedOut, generateDates, getBookInInventory } from './generate-functions.js';
 
 const patronUpperBound = 48;
 const bookUpperBound = 25;
