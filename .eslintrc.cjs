@@ -21,7 +21,6 @@ module.exports = {
         objects: 'always-multiline',
       },
     ],
-    'newline-per-chained-call': 'error',
     'no-unused-vars': ['warn', { destructuredArrayIgnorePattern: '^_' }],
     'prefer-const': 'off',
     semi: ['error', 'always'],
