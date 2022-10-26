@@ -22,7 +22,7 @@ module.exports = {
       },
     ],
     'newline-per-chained-call': 'error',
-    'no-unused-vars': 'warn',
+    'no-unused-vars': ['warn', { destructuredArrayIgnorePattern: '^_' }],
     'prefer-const': 'off',
     semi: ['error', 'always'],
     'space-before-function-paren': ['error', { named: 'never' }],
