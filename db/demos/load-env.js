@@ -4,6 +4,9 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+// TODO: If you re=use this, change this to the name of your project's directory
+// e.g. 'course-manager-full-stack'
 const root = 'library-circulation-system';
 const rootRE = new RegExp(`(.*/${root})`);
 let results = rootRE.exec(__dirname);
