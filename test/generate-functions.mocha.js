@@ -1,4 +1,4 @@
-import { getBookInInventory } from '../generate-functions.js';
+import { getBookInInventory } from '../db/generate-functions.js';
 import { expect } from 'chai';
 
 describe('generate-circulation.js', () => {

@@ -1,4 +1,4 @@
-import { getBookInInventory } from '../generate-functions.js';
+import { getBookInInventory } from '../db/generate-functions.js';
 
 describe('JEST: generate-functions.js', () => {
   let inventory = {};
@@ -41,7 +41,10 @@ describe('JEST: generate-functions.js', () => {
   it('should never return a book that has zero inventory', () => {
     let originalWarn = console.warn;
     console.warn = jest.fn();
-    let inventory = { 1: 10, 2: 0 };
+    let inventory = {
+      1: 10,
+      2: 0,
+    };
     let inventoryCount = Object.values(inventory).reduce((sum, current) => sum + current, 0);
 
     for (let x = 0; x < inventoryCount; x++) {
