@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { Book } from '../server/orm/models/index.js';
+import { Book, Inventory } from '../server/orm/models/index.js';
 import { expect } from 'chai';
 
 describe('Book model', () => {
@@ -19,6 +19,18 @@ describe('Book model', () => {
     expect(testBook.title).to.equal('The Grapes of Wrath');
 
     let inventoryRecord = await testBook.getInventory({ logging: false });
+    expect(inventoryRecord).not.to.be.null;
+    expect(inventoryRecord.inventory).to.be.greaterThan(1);
+  });
+
+  it('should query inventory (an association), eagerly', async () => {
+    let testBook = await Book.findByPk(5, {
+      include: Inventory,
+    });
+    expect(testBook.title).to.equal('The Grapes of Wrath');
+
+    // console.log('testBook:', testBook);
+    let inventoryRecord = testBook.Inventory;
     expect(inventoryRecord).not.to.be.null;
     expect(inventoryRecord.inventory).to.be.greaterThan(1);
   });
