@@ -15,7 +15,7 @@ let { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_SCHEMA } = process.env;
 let connectionString = `mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_SCHEMA}`;
 
 export const connection = new Sequelize(connectionString, {
-  logging: (...msg) => console.log(chalk.gray(msg)),
+  logging: (...msg) => console.log(chalk.gray(msg.slice(0, -1))),
   logQueryParameters: true,
   define: {
     timestamps: false,
