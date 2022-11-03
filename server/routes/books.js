@@ -53,16 +53,19 @@ router.get('/search', async (req, res) => {
   let title = criteria.get('title');
   let titleLike = criteria.get('titleLike');
 
-  try {
   // Partial implementation
+  try {
+    // Exact match
     if (title) {
       let results = await Book.findAll({
         where: {
+          // implicitly title:title
           title,
         },
       });
       if (results.length) return res.json(results);
-      return res.status(404).send(`No books with title ${title} found.`);
+      // return res.status(404).send(`No books with title ${title} found.`);
+      return res.status(404).json([]);
     }
 
     // Or should we make partial matches the default?
@@ -75,13 +78,15 @@ router.get('/search', async (req, res) => {
         },
       });
       if (results.length) return res.json(results);
-      return res.status(404).send(`No books with title ${titleLike} found.`);
+      // return res.status(404).send(`No books with title ${titleLike} found.`);
+      return res.status(404).json([]);
     }
   } catch (error) {
     handleError(res, error);
   }
 
-  return res.json([]);
+  // 404? 501? 400 for a Bad Request
+  return res.status(400).json([]);
 });
 
 router.post('/', async (req, res) => {
