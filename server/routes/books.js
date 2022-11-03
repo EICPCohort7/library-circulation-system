@@ -4,8 +4,23 @@ import { Op, ValidationError } from 'sequelize';
 let router = express.Router();
 
 function handleError(res, error) {
-  return res.status(500).send('Book endpoint error:', error);
+  return res.status(500).send('Book endpoint error:', error.message);
 }
+
+/**
+ * Most RESTful APIs have these endpoints for their resources
+ * GET /books -> Returns all books
+ * GET /books/{bookId} -> Returns the book with the id {bookId}
+ * GET /books/search?title=Gatsby OR /books?title=Gatsby -> Search on books for field=value combos
+ *    Maybe case insensitive, maybe partial matches
+ * POST /books -> Add a book
+ * PATCH /books/{bookId} -> Partially update the book with the id {bookId}
+ * PUT /books/{bookId} -> Overwrite the book with the id {bookId}
+ * DELETE /books/{bookId} -> Delete (or similar) the book with the id {bookId}
+ *
+ * @see https://github.com/typicode/json-server#routes
+ * Has several good examples of typical RESTful endpoints beyond the above
+ */
 
 router.get('/', async (req, res) => {
   try {
@@ -15,6 +30,10 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Specify a parameter on a route with a colon ":"
+// router.get('/foo/:bar') bar is now a parameter available as req.params.bar
+// Control the parameter pattern with a regular expression /:foo([a-z]{1,3})
+// Params ALWAYS come through as Strings
 router.get('/:bookId([0-9]+)', async (req, res) => {
   try {
     let bookId = req.params.bookId;
@@ -31,34 +50,38 @@ router.get('/:bookId([0-9]+)', async (req, res) => {
 router.get('/search', async (req, res) => {
   /** @see https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams */
   let criteria = new URLSearchParams(req.query);
+  let title = criteria.get('title');
+  let titleLike = criteria.get('titleLike');
 
   try {
   // Partial implementation
-    if (criteria.title) {
+    if (title) {
       let results = await Book.findAll({
         where: {
-          title: criteria.title,
+          title,
         },
       });
       if (results.length) return res.json(results);
-      return res.status(404).send(`No books with title ${criteria.title} found.`);
+      return res.status(404).send(`No books with title ${title} found.`);
     }
 
     // Or should we make partial matches the default?
-    if (criteria.titleLike) {
+    if (titleLike) {
       let results = await Book.findAll({
         where: {
           title: {
-            [Op.substring]: criteria.title,
+            [Op.substring]: titleLike,
           },
         },
       });
       if (results.length) return res.json(results);
-      return res.status(404).send(`No books with title ${criteria.title} found.`);
+      return res.status(404).send(`No books with title ${titleLike} found.`);
     }
   } catch (error) {
     handleError(res, error);
   }
+
+  return res.json([]);
 });
 
 router.post('/', async (req, res) => {
