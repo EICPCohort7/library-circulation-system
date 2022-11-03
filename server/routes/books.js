@@ -49,6 +49,7 @@ router.get('/:bookId([0-9]+)', async (req, res) => {
 // This should probably go into a controller(like) object
 router.get('/search', async (req, res) => {
   /** @see https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams */
+  console.log('Query string:', req.query);
   let criteria = new URLSearchParams(req.query);
   let title = criteria.get('title');
   let titleLike = criteria.get('titleLike');
@@ -94,12 +95,14 @@ router.post('/', async (req, res) => {
   // Note use of build() and not create()
   // Allows for local validations
     let bookToBeAdded = Book.build({ ...req.body });
+
+    // result is either bookToBeAdded OR an error
     let result = await bookToBeAdded.save();
     if (result instanceof ValidationError) {
       console.error('Validation failed:', result);
       throw result;
     }
-    return res.json(bookToBeAdded);
+    return res.status(201).json(bookToBeAdded);
   } catch (error) {
     // Might want more robust error handling here
     handleError(res, error);
@@ -110,8 +113,9 @@ router.patch('/:bookId([0-9]+)', async (req, res) => {
   try {
     let book = await Book.findByPk(req.params.bookId);
     if (!book) return res.status(404).send(`Book ID ${req.params.bookId} not found`);
-    let results = await book.update({ ...req.body });
-    console.log(`Update ${req.params.bookId}, ${results[0]} rows affected`);
+
+    await book.update({ ...req.body });
+    console.log(`Book id ${req.params.bookId} updated`);
     return res.json(book);
   } catch (error) {
     handleError(res, error);
@@ -123,9 +127,14 @@ router.put('/:bookId([0-9]+)', async (req, res) => {
     let book = await Book.findByPk(req.params.bookId);
     if (!book) return res.status(404).send(`Book ID ${req.params.bookId} not found`);
 
-    // Does a partial update, inconsistent with the definition of PUT
-    let results = await book.update({ ...req.body });
-    console.log(`Update ${req.params.bookId}, ${results[0]} rows affected`);
+    // PUT _replaces_ the record, whereas PATCH merges the record
+    book.publishYear = req.body.publishYear || null;
+    book.isbn = req.body.isbn || null;
+    book.notes = req.body.notes || null;
+    book.title = req.body.title || book.title;
+
+    await book.update({ ...req.body });
+    console.log(`Book id ${req.params.bookId} updated`);
     return res.json(book);
   } catch (error) {
     handleError(res, error);
@@ -137,7 +146,11 @@ router.delete('/:bookId([0-9]+)', async (req, res) => {
     let book = await Book.findByPk(req.params.bookId);
     if (!book) return res.status(404).send(`Book ID ${req.params.bookId} not found`);
 
-    let results = await book.destroy();
+    await book.destroy();
+    console.log(`Book ${req.params.bookId} deleted.`);
+    return res.status(204).send('');
+
+    /*
     if (results === 1) {
       console.log(`Book ${req.params.bookId} deleted.`);
       return res.status(204);
@@ -148,6 +161,7 @@ router.delete('/:bookId([0-9]+)', async (req, res) => {
       console.error('Multiple books deleted, this should not happen.');
       throw new Error('Multiple books deleted, this should not happen.');
     }
+    */
   } catch (error) {
     handleError(res, error);
   }
