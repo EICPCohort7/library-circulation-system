@@ -8,6 +8,7 @@ const __dirname = dirname(__filename);
 const webpackConfig = {
   entry: {
     index: './front-end/src/index.js',
+    books: './front-end/src/books.js',
   },
   devtool: 'inline-source-map',
   plugins: [
@@ -22,7 +23,9 @@ const webpackConfig = {
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'server/public'),
-    clean: true,
+    clean: {
+      keep: '.gitkeep',
+    },
   },
   module: {
     rules: [
