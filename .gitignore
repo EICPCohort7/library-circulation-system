@@ -70,3 +70,6 @@ server/public/*.js
 
 # IDE
 .vscode
+
+# Build
+dist
