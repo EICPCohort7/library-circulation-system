@@ -8,6 +8,7 @@
     "build:watch": "webpack --watch",
     "server:start": "node ./server/bin/www.js",
     "server:watch": "nodemon ./server/bin/www.js",
+    "start": "node ./server/bin/www.js",
     "test:mocha": "mocha"
   },
   "dependencies": {
