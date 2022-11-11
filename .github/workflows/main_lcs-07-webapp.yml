@@ -31,7 +31,7 @@ jobs:
       - name: Zip Artifact
         run: |
           mkdir -p dist
-          zip dist/release.zip node_modules server package* -ruq
+          zip dist/release.zip node_modules server package*
         
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
