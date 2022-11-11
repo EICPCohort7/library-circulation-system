@@ -67,3 +67,6 @@ typings/
 server/public/css
 server/public/*.html
 server/public/*.js
+
+# IDE
+.vscode
