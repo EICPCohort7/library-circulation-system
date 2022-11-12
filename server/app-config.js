@@ -3,6 +3,8 @@ import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'url';
 import * as dotenv from 'dotenv';
 
+console.log(chalk.blue('Current environment', process.env));
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const dotEnvResults = dotenv.config({ path: path.join(__dirname, '../.env') });
