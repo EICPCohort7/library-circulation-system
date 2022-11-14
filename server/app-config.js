@@ -11,6 +11,7 @@ export function getConnectionConfig() {
     port: '',
     schema: '',
     source: 'unknown',
+    useSSL: false,
   };
 
   if (process.env.WEBSITE_HOSTNAME && process.env.WEBSITE_HOSTNAME.includes('azurewebsites')) {
@@ -44,6 +45,7 @@ export function getConnectionConfig() {
     connectionConfig.host = process.env.DB_HOST;
     connectionConfig.port = process.env.DB_PORT;
     connectionConfig.schema = process.env.DB_SCHEMA;
+    connectionConfig.useSSL = process.env.DB_USE_SSL || connectionConfig.useSSL;
   }
 
   return connectionConfig;

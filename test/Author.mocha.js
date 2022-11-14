@@ -2,7 +2,12 @@
 import { Author } from '../server/orm/models/index.js';
 import { expect } from 'chai';
 
-describe('Author model', () => {
+// MUST use a function to have access to this.timeout() below
+describe('Author model', function () {
+  // Disable timeouts, since we might run this against Azure, which
+  // will take 2-10 seconds on the first connection
+  this.timeout(0);
+
   it('Smoke Test', async () => {
     let result = await Author.sync({ logging: false });
     expect(result).to.equal(Author);
