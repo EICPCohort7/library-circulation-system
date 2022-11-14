@@ -3,29 +3,45 @@ import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'url';
 import * as dotenv from 'dotenv';
 
-console.log(chalk.blue('Current environment', process.env));
+export function getConnectionConfig() {
+  let connectionConfig = {
+    user: '',
+    password: '',
+    host: '',
+    port: '',
+    schema: '',
+  };
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const dotEnvResults = dotenv.config({ path: path.join(__dirname, '../.env') });
+  if (process.env.WEBSITE_HOSTNAME && process.env.WEBSITE_HOSTNAME.includes('azurewebsites')) {
+    // Get config from Azure
+    connectionConfig.user = process.env.AZURE_MYSQL_USER;
+    connectionConfig.password = process.env.AZURE_MYSQL_PASSWORD;
+    connectionConfig.host = process.env.AZURE_MYSQL_HOST;
+    connectionConfig.port = process.env.AZURE_MYSQL_PORT;
+    connectionConfig.schema = process.env.AZURE_MYSQL_DATABASE;
+  } else {
+    // Assume local config
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const dotEnvResults = dotenv.config({ path: path.join(__dirname, '../.env') });
 
-if (dotEnvResults.error) {
-  if (dotEnvResults.error.code === 'ENOENT') {
-    console.error(
-      chalk.red.bold(
-        '***** ERROR: Please create a .env file with the appropriate information! *****'
-      )
-    );
+    if (dotEnvResults.error) {
+      if (dotEnvResults.error.code === 'ENOENT') {
+        console.error(
+          chalk.red.bold(
+            '***** ERROR: Please create a .env file with the appropriate information! *****'
+          )
+        );
+      }
+      throw dotEnvResults.error;
+    }
+
+    connectionConfig.user = process.env.DB_USER;
+    connectionConfig.password = process.env.DB_PASSWORD;
+    connectionConfig.host = process.env.DB_HOST;
+    connectionConfig.port = process.env.DB_PORT;
+    connectionConfig.schema = process.env.DB_SCHEMA;
   }
-  throw dotEnvResults.error;
+
+  return connectionConfig;
 }
-
-let { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_SCHEMA } = process.env;
-
-console.log(`
-DB_USER: ${DB_USER}
-DB_PASSWORD: ${DB_PASSWORD}
-DB_HOST: ${DB_HOST}
-DB_PORT: ${DB_PORT}
-DB_SCHEMA: ${DB_SCHEMA}
-`);

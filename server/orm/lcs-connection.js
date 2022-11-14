@@ -1,18 +1,10 @@
 import { Sequelize } from 'sequelize';
+import { getConnectionConfig } from '../app-config';
 import chalk from 'chalk';
 
-/*
- * process.env should have the following keys:
- * DB_USER
- * DB_PASSWORD
- * DB_HOST
- * DB_PORT
- * DB_SCHEMA
- */
+let { user, password, host, port, schema } = getConnectionConfig();
 
-let { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_SCHEMA } = process.env;
-
-let connectionString = `mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_SCHEMA}`;
+let connectionString = `mysql://${user}:${password}@${host}:${port}/${schema}`;
 
 export const connection = new Sequelize(connectionString, {
   logging: (...msg) => console.log(chalk.gray(msg.slice(0, -1))),
