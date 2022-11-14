@@ -74,9 +74,9 @@ CREATE TABLE
     FOREIGN key (patron_id) REFERENCES patrons (patron_id)
   );
 
-CREATE USER lcsaccess IDENTIFIED BY 'lcsaccess07';
+CREATE USER lcs_access IDENTIFIED BY 'lcsaccess07';
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON books.* TO lcsaccess;
+GRANT SELECT, INSERT, UPDATE, DELETE ON books.* TO lcs_access;
 
 INSERT INTO
   authors
