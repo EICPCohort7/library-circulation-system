@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
 import debugRouter from './routes/debug.js';
+import booksRouter from './routes/books.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -24,5 +25,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/debug', debugRouter);
+app.use('/api/v1/books', booksRouter);
 
 export default app;
