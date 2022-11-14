@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import { fileURLToPath } from 'url';
-import path, { dirname } from 'path';
+import { dirname } from 'path';
 import { Sequelize } from 'sequelize';
 import { getConnectionConfig } from '../app-config.js';
 import chalk from 'chalk';
@@ -21,7 +21,7 @@ let sequelizeConfig = {
   },
 };
 
-if (useSSL) {
+if (useSSL === 'true') {
   sequelizeConfig.dialect = 'mysql';
   sequelizeConfig.dialectOptions = {
     ssl: {
