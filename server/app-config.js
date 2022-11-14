@@ -10,10 +10,12 @@ export function getConnectionConfig() {
     host: '',
     port: '',
     schema: '',
+    source: 'unknown',
   };
 
   if (process.env.WEBSITE_HOSTNAME && process.env.WEBSITE_HOSTNAME.includes('azurewebsites')) {
     // Get config from Azure
+    connectionConfig.source = 'AZURE';
     connectionConfig.user = process.env.AZURE_MYSQL_USER;
     connectionConfig.password = process.env.AZURE_MYSQL_PASSWORD;
     connectionConfig.host = process.env.AZURE_MYSQL_HOST;
@@ -36,6 +38,7 @@ export function getConnectionConfig() {
       throw dotEnvResults.error;
     }
 
+    connectionConfig.source = 'ENV';
     connectionConfig.user = process.env.DB_USER;
     connectionConfig.password = process.env.DB_PASSWORD;
     connectionConfig.host = process.env.DB_HOST;
